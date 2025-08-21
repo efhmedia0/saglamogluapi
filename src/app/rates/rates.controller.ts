@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Header } from '@nestjs/common';
 import { RatesService } from './rates.service';
 
 @Controller('api/app/rates')
@@ -6,7 +6,9 @@ export class RatesController {
   constructor(private readonly ratesService: RatesService) {}
 
   @Get(':symbol')
-  findOne(@Param('symbol') symbol: string) {
-    return this.ratesService.findOne(symbol)
+  @Header('content-type', 'text/html')
+  async findOne(@Param('symbol') symbol: string) {
+    const data = await this.ratesService.findOne(symbol)
+    return `<div>${data}</div>`
   }
 }

@@ -9,6 +9,12 @@ export class RatesController {
   @Header('content-type', 'text/html')
   async findOne(@Param('symbol') symbol: string) {
     const data = await this.ratesService.findOne(symbol)
-    return `<div>${data}</div>`
+    return `
+<html>
+<head></head>
+<body>
+<div>${data}</div>
+</body>
+</html>`
   }
 }

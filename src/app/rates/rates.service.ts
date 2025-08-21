@@ -1,17 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { Injectable } from '@nestjs/common';
 import 'dotenv/config';
+import { SocketService } from '../../socket/socket.service';
 
 @Injectable()
 export class RatesService {
-  supabase: SupabaseClient<any, 'public', any>;
 
-  constructor() {
-    const supabaseUrl = 'https://vsohouvxxqqiocqqwbco.supabase.co';
-    const supabaseKey = process.env.SUPABASE_KEY;
-
-    this.supabase = createClient(supabaseUrl, supabaseKey);
-  }
+  constructor(private readonly socketService: SocketService) {}
 
   private formatSymbol(symbol: string) {
     if (symbol === 'usd') symbol = 'usd-try';
@@ -35,13 +29,9 @@ export class RatesService {
   async findOne(symbol: string) {
     symbol = symbol.toLowerCase();
 
-    const { data, error } = await this.supabase
-      .from('currencies')
-      .select()
-      .eq('key', this.formatSymbol(symbol))
-      .single();
+    const data = this.socketService.getCurrency(this.formatSymbol(symbol));
 
-    if (error) return "1-1"
+    if (!data) return "1-1"
 
     return `${data.alis}-${data.satis}`;
   }

@@ -1,5 +1,6 @@
 import { Controller, Get, Param, Header } from '@nestjs/common';
 import { RatesService } from './rates.service';
+import { SocketService } from '../../socket/socket.service';
 
 @Controller('api/app/rates')
 export class RatesController {
